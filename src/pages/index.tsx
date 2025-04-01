@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import axios from "axios";
 import { IRestaurant } from "@/models/Restaurant";
 import { isRestaurantOpen } from "@/utils/restaurantStatus";
-import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [restaurants, setRestaurants] = useState<Partial<IRestaurant>[]>([]);
@@ -15,7 +14,6 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const ITEMS_PER_PAGE = 9;
-  const { user } = useAuth();
 
   useEffect(() => {
     const fetchRestaurants = async () => {

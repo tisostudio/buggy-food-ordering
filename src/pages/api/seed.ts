@@ -4,7 +4,6 @@ import connectDB from "@/lib/db";
 import Restaurant from "@/models/Restaurant";
 import User from "@/models/User";
 
-
 const isProduction = process.env.NODE_ENV === "production";
 
 export default async function handler(
@@ -26,17 +25,14 @@ export default async function handler(
 
     const seedCount = parseInt(req.query.count as string) || 20;
 
-    
     const shouldClear = req.query.clear === "true";
     if (shouldClear) {
       await Restaurant.deleteMany({});
       await User.deleteMany({});
     }
 
-    
     const restaurants = await seedRestaurants(seedCount);
 
-    
     const users = await seedUsers(5);
 
     return res.status(200).json({
@@ -70,13 +66,11 @@ async function seedRestaurants(count: number) {
   const restaurantsToCreate = Array(count)
     .fill(0)
     .map(() => {
-      
       const restaurantCuisines = faker.helpers.arrayElements(
         cuisines,
         faker.number.int({ min: 1, max: 3 })
       );
 
-      
       const menuItemsCount = faker.number.int({ min: 6, max: 15 });
       const menuItems = Array(menuItemsCount)
         .fill(0)
@@ -91,7 +85,7 @@ async function seedRestaurants(count: number) {
             name: faker.commerce.productName(),
             description: faker.commerce.productDescription(),
             price,
-            image: "https:
+            image: "https://via.placeholder.com/150",
             category: faker.helpers.arrayElement([
               "Appetizers",
               "Main Course",
@@ -109,27 +103,21 @@ async function seedRestaurants(count: number) {
           };
         });
 
-      
       const isNightRestaurant = faker.datatype.boolean({ probability: 0.2 });
 
-      
       let openHour, closeHour;
 
       if (isNightRestaurant) {
-        
-        openHour = faker.number.int({ min: 17, max: 20 }); 
-        closeHour = faker.number.int({ min: 2, max: 6 }); 
+        openHour = faker.number.int({ min: 17, max: 20 });
+        closeHour = faker.number.int({ min: 2, max: 6 });
       } else {
-        
-        openHour = faker.number.int({ min: 7, max: 11 }); 
-        closeHour = faker.number.int({ min: 19, max: 23 }); 
+        openHour = faker.number.int({ min: 7, max: 11 });
+        closeHour = faker.number.int({ min: 19, max: 23 });
       }
 
-      
       const formattedOpenHour = openHour.toString().padStart(2, "0") + ":00";
       const formattedCloseHour = closeHour.toString().padStart(2, "0") + ":00";
 
-      
       const daysOpen = Array.from({ length: 7 }, (_, i) => i).filter(() =>
         faker.datatype.boolean({ probability: 0.9 })
       );
@@ -159,13 +147,12 @@ async function seedRestaurants(count: number) {
           daysOpen: daysOpen.length > 0 ? daysOpen : [0, 1, 2, 3, 4, 5, 6],
         },
         isNightRestaurant: isNightRestaurant,
-        image: "https:
+        image: "https://via.placeholder.com/150",
         featured: faker.datatype.boolean({ probability: 0.3 }),
         manuallyClosed: faker.datatype.boolean({ probability: 0.2 }),
       };
     });
 
-  
   return await Restaurant.insertMany(restaurantsToCreate);
 }
 
@@ -173,7 +160,6 @@ async function seedUsers(count: number) {
   const usersToCreate = Array(count)
     .fill(0)
     .map(() => {
-      
       const addressesCount = faker.number.int({ min: 1, max: 3 });
       const addresses = Array(addressesCount)
         .fill(0)
@@ -182,19 +168,18 @@ async function seedUsers(count: number) {
           city: faker.location.city(),
           state: faker.location.state(),
           zipCode: faker.location.zipCode(),
-          isDefault: index === 0, 
+          isDefault: index === 0,
         }));
 
       return {
         name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
-        
+
         password: faker.internet.password({ length: 12 }),
         addresses,
         phoneNumber: faker.phone.number(),
       };
     });
 
-  
   return await User.insertMany(usersToCreate);
 }

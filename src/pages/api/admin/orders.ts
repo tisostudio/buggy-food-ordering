@@ -16,14 +16,16 @@ export default async function handler(
   }
 
   const token = authHeader.split(" ")[1];
-  let decoded;
 
   try {
-    decoded = jwt.verify(
+    jwt.verify(
       token,
       process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production"
     );
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
     return res.status(401).json({ message: "Invalid token" });
   }
 
