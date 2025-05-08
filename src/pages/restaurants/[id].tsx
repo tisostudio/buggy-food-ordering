@@ -125,7 +125,10 @@ const RestaurantDetail: NextPage = () => {
 
       if(restaurantId && restaurantId !== _restaurantId){
         toast.error("Adding item from different restaurants");
-      }else{
+      }else if(!isRestaurantOpen){
+        toast.error("Adding item from closed restaurants");
+      }
+      else{
         toast.success("Item added to cart");
       }
     },
