@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import { toast } from "react-hot-toast";
 
 const SignInPage: NextPage = () => {
   const router = useRouter();
+  const { login,error } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -31,7 +33,7 @@ const SignInPage: NextPage = () => {
 
     setIsLoading(true);
 
-    setTimeout(() => {
+    login(email,password).then(()=>{
       if (rememberMe) {
         localStorage.setItem("userEmail", email);
 
@@ -42,11 +44,12 @@ const SignInPage: NextPage = () => {
       sessionStorage.setItem("userEmail", email);
 
       toast.success("Sign in successful");
-      setIsLoading(false);
 
       const redirectPath = (router.query.redirectTo as string) || "/";
       router.push(redirectPath);
-    }, 1500);
+    }).finally(()=>{
+      setIsLoading(false);
+    });
   };
 
   return (
@@ -69,6 +72,11 @@ const SignInPage: NextPage = () => {
               </Link>
             </p>
           </div>
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
