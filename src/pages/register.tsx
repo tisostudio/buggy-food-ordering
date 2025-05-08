@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { useAuth } from "@/hooks/useAuth";
 
 type FormData = {
   name: string;
@@ -12,9 +10,7 @@ type FormData = {
 };
 
 export default function Register() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { error, loading: isSubmitting, register: createUser } = useAuth();
 
   const {
     register,
@@ -26,30 +22,23 @@ export default function Register() {
   const password = watch("password");
 
   const onSubmit = async (data: FormData) => {
-    if (data.password !== data.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    // if (data.password !== data.confirmPassword) {
+    //   setError("Passwords do not match");
+    //   return;
+    // }
 
-    setIsSubmitting(true);
-    setError(null);
+    // setIsSubmitting(true);
+    // setError(null);
 
     try {
-      
-      await axios.post("/api/auth/register", {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      });
-
-      
-      router.push("/signin");
+      await createUser(
+        data.name,
+        data.email,
+        data.password,
+        data.confirmPassword
+      );
     } catch (err: unknown) {
-      
-      setError("Registration failed. Please try again.");
       console.error("Registration error:", (err as Error).message);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -152,10 +141,10 @@ export default function Register() {
                       value: 8,
                       message: "Password must be at least 8 characters",
                     },
-                    maxLength:{
-                      value:32,
-                      message:"Password must be at most 32 characters"
-                    }
+                    maxLength: {
+                      value: 32,
+                      message: "Password must be at most 32 characters",
+                    },
                   })}
                 />
                 {errors.password && (

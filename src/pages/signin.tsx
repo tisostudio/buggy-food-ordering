@@ -2,17 +2,18 @@ import { useAuth } from "@/hooks/useAuth";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 const SignInPage: NextPage = () => {
-  const router = useRouter();
-  const { login,error } = useAuth();
+  const { login, error, loading,clearError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(()=>{
+    clearError();
+  },[])
 
   const isValidEmail = () => true;
 
@@ -30,26 +31,11 @@ const SignInPage: NextPage = () => {
       toast.error("Password must be at least 6 characters");
       return;
     }
-
-    setIsLoading(true);
-
-    login(email,password).then(()=>{
-      if (rememberMe) {
-        localStorage.setItem("userEmail", email);
-
-        localStorage.setItem("userPassword", password);
-      }
-
-      sessionStorage.setItem("isLoggedIn", "true");
-      sessionStorage.setItem("userEmail", email);
-
-      toast.success("Sign in successful");
-
-      const redirectPath = (router.query.redirectTo as string) || "/";
-      router.push(redirectPath);
-    }).finally(()=>{
-      setIsLoading(false);
-    });
+    try {
+      await login(email, password,rememberMe);
+    } catch (err) {
+      console.error("Sign In error:", err);
+    }
   };
 
   return (
@@ -143,14 +129,14 @@ const SignInPage: NextPage = () => {
             <div>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                  isLoading
+                  loading
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 }`}
               >
-                {isLoading ? (
+                {loading ? (
                   <span className="flex items-center">
                     <svg
                       className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

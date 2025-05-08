@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { hash, compare } from "bcrypt";
 
 
-const EMAIL_REGEX = /\S+@\S+\.\S+/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export interface IUser extends Document {
   name: string;

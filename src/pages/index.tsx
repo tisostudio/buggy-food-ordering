@@ -236,7 +236,7 @@ export default function Home() {
                   <div className="relative h-48">
                     {restaurant.image ? (
                       <Image
-                        src={restaurant.image}
+                        src={restaurant.image || "/placeholder-restaurant.jpg"}
                         alt={restaurant.name || "Restaurant"}
                         fill
                         className="object-cover"

@@ -91,7 +91,7 @@ async function seedRestaurants(count: number) {
             name: faker.commerce.productName(),
             description: faker.commerce.productDescription(),
             price,
-            image: "https",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/500px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
             category: faker.helpers.arrayElement([
               "Appetizers",
               "Main Course",
@@ -159,7 +159,7 @@ async function seedRestaurants(count: number) {
           daysOpen: daysOpen.length > 0 ? daysOpen : [0, 1, 2, 3, 4, 5, 6],
         },
         isNightRestaurant: isNightRestaurant,
-        image: "https",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Barbieri_-_ViaSophia25668.jpg/250px-Barbieri_-_ViaSophia25668.jpg",
         featured: faker.datatype.boolean({ probability: 0.3 }),
         manuallyClosed: faker.datatype.boolean({ probability: 0.2 }),
       };
