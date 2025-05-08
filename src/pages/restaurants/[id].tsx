@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import connectDB from "@/lib/db";
 import { MenuItem } from "@/models/Restaurant";
 import { useCartStore } from "@/store/cartStore";
@@ -40,6 +41,7 @@ interface RestaurantDetails {
 const RestaurantDetail: NextPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isRestaurantOpen, setIsRestaurantOpen] = useState<boolean>(true);
+  const { user } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
@@ -106,6 +108,9 @@ const RestaurantDetail: NextPage = () => {
   const addItemToCart = useCallback(
     (menuItem: MenuItem) => {
       if (!restaurant) return;
+      if (!user) {
+        router.push(`/signin?redirectTo=/restaurants/${id}`);
+      }
 
       const restaurantId = restaurant._id || restaurant.id || "";
 
@@ -283,10 +288,10 @@ const RestaurantDetail: NextPage = () => {
                               ${item.price.toFixed(2)}
                             </span>
                             <button
-                              onClick={() => addItemToCart(item)}
+                              onClick={() =>addItemToCart(item)}
                               className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
                             >
-                              Add to Cart
+                              {user ? "Add to Cart": "Login to add to cart"}
                             </button>
                           </div>
                         </div>

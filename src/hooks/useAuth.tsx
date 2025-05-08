@@ -85,13 +85,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       toast.success("Sign in successful");
 
-      const redirectPath = (router.query.redirectTo as string) || "/";
-      router.push(redirectPath);
       
       localStorage.setItem("auth_token", response.data.token);
 
       setUser(response.data.user);
-      router.push("/");
+
+      const redirectPath = (router.query.redirectTo as string) || "/";
+      router.push(redirectPath);
     } catch (error: unknown) {
       setError("Invalid credentials. Please try again.");
       console.error("Login error:", error);
