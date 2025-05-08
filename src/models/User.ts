@@ -41,7 +41,7 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: [true, "Please provide a password"],
       minlength: [8, "Password must be at least 8 characters"],
-      
+      maxlength: [32, "Password must be at most 32 characters"]
     },
     addresses: [
       {

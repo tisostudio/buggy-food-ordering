@@ -152,7 +152,10 @@ export default function Register() {
                       value: 8,
                       message: "Password must be at least 8 characters",
                     },
-                    
+                    maxLength:{
+                      value:32,
+                      message:"Password must be at most 32 characters"
+                    }
                   })}
                 />
                 {errors.password && (
