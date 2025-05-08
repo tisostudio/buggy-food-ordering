@@ -55,7 +55,7 @@ const UserSchema: Schema = new Schema(
     ],
     phoneNumber: {
       type: String,
-      match: [/^[1-9]\d{9}$/, "Please enter a valid 10-digit phone number"]
+      match: [/^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}(\s?(x|ext\.?)\s?\d{1,5})?$/, "Please enter a valid phone number (e.g. 961-770-7727)"]
     },
   },
   {
