@@ -180,14 +180,14 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search for restaurants..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border text-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div>
               <select
-                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full sm:w-auto px-4 py-2 text-gray-600 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={cuisine}
                 onChange={(e) => setCuisine(e.target.value)}
               >
@@ -254,7 +254,7 @@ export default function Home() {
                   </div>
                   <div className="p-4">
                     <div className="flex justify-between items-start">
-                      <h2 className="text-lg font-semibold">
+                      <h2 className="text-lg font-semibold text-gray-500">
                         {restaurant.name}
                       </h2>
                       <div className="flex items-center">

@@ -47,7 +47,7 @@ const RestaurantDetail: NextPage = () => {
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { addItem, items } = useCartStore();
+  const { addItem, items,restaurantId } = useCartStore();
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
@@ -112,18 +112,22 @@ const RestaurantDetail: NextPage = () => {
         router.push(`/signin?redirectTo=/restaurants/${id}`);
       }
 
-      const restaurantId = restaurant._id || restaurant.id || "";
+      const _restaurantId = restaurant._id || restaurant.id || "";
 
       const cartItemId = `${restaurantId}-${menuItem.name}`;
 
       addItem({
         id: cartItemId,
-        restaurantId: restaurantId,
+        restaurantId: _restaurantId,
         menuItem,
         quantity: 1,
       });
 
-      toast.success("Item added to cart");
+      if(restaurantId && restaurantId !== _restaurantId){
+        toast.error("Adding item from different restaurants");
+      }else{
+        toast.success("Item added to cart");
+      }
     },
     [restaurant, isRestaurantOpen]
   );
@@ -247,7 +251,7 @@ const RestaurantDetail: NextPage = () => {
                       onClick={() => setSelectedCategory(null)}
                       className={`px-4 py-2 rounded-full whitespace-nowrap ${
                         selectedCategory === null
-                          ? "bg-primary text-white"
+                          ? "bg-primary text-white bg-gray-600"
                           : "bg-gray-200 text-gray-800"
                       }`}
                     >
@@ -259,7 +263,7 @@ const RestaurantDetail: NextPage = () => {
                         onClick={() => setSelectedCategory(category)}
                         className={`px-4 py-2 rounded-full whitespace-nowrap ${
                           selectedCategory === category
-                            ? "bg-primary text-white"
+                            ? "bg-primary text-white bg-gray-600"
                             : "bg-gray-200 text-gray-800"
                         }`}
                       >
