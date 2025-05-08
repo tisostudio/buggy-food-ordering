@@ -43,8 +43,8 @@ export default async function handler(
     
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production"
-      
+      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production",
+      {expiresIn:10} // Setting Expiry of token to 10 second for testing. 
     );
 
     

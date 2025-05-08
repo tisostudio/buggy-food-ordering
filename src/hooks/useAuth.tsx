@@ -52,6 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             headers: { Authorization: `Bearer ${token}` },
           });
 
+          if(response.status === 401){
+            localStorage.removeItem("auth_token")
+            router.push("/")
+            return
+          }
+
           setUser(response.data.user);
         }
       } catch (err) {
