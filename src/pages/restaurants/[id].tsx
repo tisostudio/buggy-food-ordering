@@ -296,7 +296,8 @@ const RestaurantDetail: NextPage = () => {
                             </span>
                             <button
                               onClick={() =>addItemToCart(item)}
-                              className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
+                              className={`px-3 py-1 rounded ${item.available ?  "bg-red-600 hover:bg-red-700": "bg-gray-600 hover:bg-gray-700"} text-white font-bold`}
+                              disabled={!item.available}
                             >
                               {user ? "Add to Cart": "Login to add to cart"}
                             </button>
