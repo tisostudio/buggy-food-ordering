@@ -52,9 +52,16 @@ export default async function handler(
         email: user.email,
       },
       token,
-    });
+});
   } catch (error: unknown) {
     console.error("Registration error:", error);
+
+    if ((error as {code : number}).code === 11000){
+      return res
+        .status(409)
+        .json({ message: "Email Already Exists" });
+
+    }
 
     return res
       .status(500)

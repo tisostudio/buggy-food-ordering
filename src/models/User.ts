@@ -31,6 +31,7 @@ const UserSchema: Schema = new Schema(
     email: {
       type: String,
       required: [true, "Please provide an email"],
+      unique:true,
       validate: {
         validator: (email: string) => EMAIL_REGEX.test(email),
         message: "Please provide a valid email",
