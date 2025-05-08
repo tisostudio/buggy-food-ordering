@@ -3,7 +3,7 @@ import connectDB from "@/lib/db";
 import User from "@/models/User";
 import jwt from "jsonwebtoken";
 
-const EMAIL_REGEX = /\S+@\S+\.\S+/;
+const EMAIL_REGEX =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default async function handler(
   req: NextApiRequest,
