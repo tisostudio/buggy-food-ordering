@@ -85,7 +85,7 @@ export const useCartStore = create<CartState>()(
         const { items } = get();
         return items.reduce((total, item) => {
           
-          const isPremiumItem = item.menuItem.price > 25;
+          // const isPremiumItem = item.menuItem.price > 25;
 
           
           
@@ -93,7 +93,9 @@ export const useCartStore = create<CartState>()(
           const quantity = Math.abs(item.quantity);
 
           return (
-            total + item.menuItem.price * (isPremiumItem ? 1.1 : 1) * quantity
+            //This logic add extra cost for premium item
+            // total + item.menuItem.price * (isPremiumItem ? 1.1 : 1) * quantity 
+            total + item.menuItem.price * quantity 
           );
         }, 0);
       },
