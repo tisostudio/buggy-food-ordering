@@ -69,7 +69,7 @@ export const useCartStore = create<CartState>()(
         
         const itemIndex = items.findIndex((item) => item.id === id);
 
-        if (itemIndex >= 0) {
+        if (itemIndex >= 0 && quantity > 0) {
           
           const updatedItems = [...items];
           updatedItems[itemIndex].quantity = quantity;

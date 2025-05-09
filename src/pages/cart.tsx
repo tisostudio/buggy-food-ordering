@@ -120,8 +120,9 @@ const CartPage: NextPage = () => {
                                       item.quantity - 1
                                     )
                                   }
-                                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                                  className={`px-3 py-1 ${item.quantity > 1 ?"text-gray-600 hover:bg-gray-100":"text-gray-300"} " `}
                                   aria-label="Decrease quantity"
+                                  disabled={item.quantity <= 1 }
                                 >
                                   -
                                 </button>
