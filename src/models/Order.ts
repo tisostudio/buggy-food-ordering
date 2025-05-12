@@ -104,11 +104,29 @@ const OrderSchema: Schema = new Schema(
       
     },
     deliveryAddress: {
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      zipCode: { type: String, required: true },
-      
+      street: { 
+        type: String, 
+        required: true,
+        trim: true,
+        minlength: 5
+      },
+      city: { 
+        type: String, 
+        required: true,
+        trim: true,
+        match: /^[a-zA-Z\s]+$/
+      },
+      state: { 
+        type: String, 
+        required: true,
+        trim: true,
+        match: /^[a-zA-Z\s]+$/
+      },
+      zipCode: { 
+        type: String, 
+        required: true,
+        match: /^\d{5}$/
+      },
     },
     paymentMethod: {
       type: String,
