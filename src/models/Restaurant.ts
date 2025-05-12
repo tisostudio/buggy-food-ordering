@@ -63,6 +63,7 @@ const RestaurantSchema: Schema = new Schema(
       min: 0,
       max: 5,
       default: 0,
+      set: (v:number) => Math.round(v * 10) / 10,
     },
     deliveryTime: {
       type: Number,
