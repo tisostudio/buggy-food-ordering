@@ -153,9 +153,23 @@ const OrderSchema: Schema = new Schema(
 );
 
 
-OrderSchema.pre("save", function (next) {
-  
-  next();
+OrderSchema.pre("save", async function (next) {
+  const baseTimeMinutes = 30;
+
+  try {
+    const activeOrders = await mongoose.models.Order.countDocuments({
+      restaurant: this.restaurant,
+      status: { $in: ["pending", "preparing"] },
+    });
+
+    const estimatedMinutes = baseTimeMinutes + activeOrders * 2;
+
+    this.estimatedDeliveryTime = estimatedMinutes;
+
+    next();
+  } catch (err) {
+    next(err as Error);
+  }
 });
 
 export default mongoose.models.Order ||
