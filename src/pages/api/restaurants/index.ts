@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "@/lib/db";
-import Restaurant from "@/models/Restaurant";
+import Restaurant, { IRestaurant } from "@/models/Restaurant";
 
 
 interface RestaurantQuery {
@@ -63,6 +63,7 @@ export default async function handler(
         .skip(skip)
         .limit(limit)
         .select("-menu"); 
+      restaurants = restaurants.filter(r => isRestaurantOpen(r.openingHours) && !r.manuallyClosed);
 
       console.log("API: Restaurants found:", restaurants.length);
 
@@ -102,4 +103,18 @@ export default async function handler(
     
     return res.status(500).json({ message: "Server error" });
   }
+}
+
+function isRestaurantOpen(openingHours: IRestaurant["openingHours"]): boolean {
+  const now = new Date();
+  const currentDay = now.getDay(); 
+
+  if (!openingHours.daysOpen.includes(currentDay)) {
+    return false;
+  }
+
+  const currentTime = now.toTimeString().slice(0, 5); 
+  const { open, close } = openingHours;
+
+  return currentTime >= open && currentTime < close;
 }
