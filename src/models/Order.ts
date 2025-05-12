@@ -134,7 +134,7 @@ const OrderSchema: Schema = new Schema(
     },
     paymentId: {
       type: String,
-      
+      required: true,
     },
     estimatedDeliveryTime: {
       type: Date,
