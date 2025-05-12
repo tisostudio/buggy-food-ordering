@@ -47,6 +47,13 @@ const CheckoutPage: NextPage = () => {
 
     setIsProcessing(true);
 
+    //bug marked as backend but coudn't find that have credit card details at backend, so just putting frontend validation
+    const isValid = ValidateCreditCardDetails(cardDetails);
+      if(!isValid){
+      setIsProcessing(false);
+      toast.error("Please Check Card Details");
+      return;
+    }
     
     setTimeout(() => {
       
@@ -376,3 +383,43 @@ const CheckoutPage: NextPage = () => {
 };
 
 export default CheckoutPage;
+function ValidateCreditCardDetails(cardDetails: { name: string; number: string; expiry: string; cvv: string; }): boolean {
+  const { name, number, expiry, cvv } = cardDetails;
+
+  // All fields must be filled
+  if (!name.trim() || !number.trim() || !expiry.trim() || !cvv.trim()) {
+    return false;
+  }
+
+  // Card number: digits only, 13-19 digits
+  const cardNumberRegex = /^\d{13,19}$/;
+  if (!cardNumberRegex.test(number)) {
+    return false;
+  }
+
+  // CVV: 3 or 4 digits
+  const cvvRegex = /^\d{3,4}$/;
+  if (!cvvRegex.test(cvv)) {
+    return false;
+  }
+
+  // Expiry format MM/YY
+  const expiryRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+  if (!expiryRegex.test(expiry)) {
+    return false;
+  }
+
+  // Check if expiry date is in the future
+  const [expMonthStr, expYearStr] = expiry.split('/');
+  const expMonth = parseInt(expMonthStr, 10);
+  const expYear = parseInt(expYearStr, 10) + 2000; // e.g., '25' => 2025
+
+  const today = new Date();
+  const expiryDate = new Date(expYear, expMonth, 0); // last day of expiry month
+
+  if (expiryDate < today) {
+    return false;
+  }
+
+  return true;
+}
