@@ -27,6 +27,7 @@ export default async function handler(
       });
 
       
+      restaurant.menu = restaurant.menu.filter((item:{available:boolean}) => item.available);
       return res.status(200).json(restaurant);
     } catch (error) {
       console.error("Error fetching restaurant:", error);
