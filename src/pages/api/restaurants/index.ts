@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "@/lib/db";
-import Restaurant, { IRestaurant } from "@/models/Restaurant";
+import Restaurant from "@/models/Restaurant";
 import { SortOrder } from "mongoose";
-
 
 interface RestaurantQuery {
   name?: { $regex: unknown; $options: string };
@@ -71,12 +70,11 @@ export default async function handler(
         querySort[sortField] = sortDirection;
       }
       
-      let restaurants = await Restaurant.find(query)
+      const restaurants = await Restaurant.find(query)
         .sort(querySort)
         .skip(skip)
         .limit(limit)
         .select("-menu"); 
-      restaurants = restaurants.filter(r => isRestaurantOpen(r.openingHours) && !r.manuallyClosed);
 
       console.log("API: Restaurants found:", restaurants.length);
 
@@ -116,18 +114,4 @@ export default async function handler(
     
     return res.status(500).json({ message: "Server error" });
   }
-}
-
-function isRestaurantOpen(openingHours: IRestaurant["openingHours"]): boolean {
-  const now = new Date();
-  const currentDay = now.getDay(); 
-
-  if (!openingHours.daysOpen.includes(currentDay)) {
-    return false;
-  }
-
-  const currentTime = now.toTimeString().slice(0, 5); 
-  const { open, close } = openingHours;
-
-  return currentTime >= open && currentTime < close;
 }
