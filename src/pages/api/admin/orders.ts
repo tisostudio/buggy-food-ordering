@@ -85,6 +85,6 @@ export default async function handler(
       return res.status(500).json({ message: "Failed to update order" });
     }
   }
-
+  res.setHeader("Allow", ["GET","PATCH"]);
   return res.status(405).json({ message: "Method not allowed" });
 }

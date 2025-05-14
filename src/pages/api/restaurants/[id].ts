@@ -34,6 +34,7 @@ export default async function handler(
       return res.status(500).json({ message: "Error fetching restaurant" });
     }
   } else {
+    res.setHeader("Allow", ["GET"]);
     return res.status(405).json({ message: "Method not allowed" });
   }
 }

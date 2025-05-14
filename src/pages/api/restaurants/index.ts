@@ -79,20 +79,6 @@ export default async function handler(
       console.log("API: Restaurants found:", restaurants.length);
 
       
-      // if (sort) {
-      //   const sortField = (sort as string).replace("-", "");
-      //   const sortDirection = (sort as string).startsWith("-") ? -1 : 1;
-
-        
-      //   restaurants = restaurants.sort((a, b) => {
-      //     const aValue = a.get(sortField);
-      //     const bValue = b.get(sortField);
-      //     if (aValue < bValue) return -1 * sortDirection;
-      //     if (aValue > bValue) return 1 * sortDirection;
-      //     return 0;
-      //   });
-      // }
-
       
       return res.status(200).json({
         restaurants,
@@ -107,7 +93,7 @@ export default async function handler(
       });
     }
 
-    
+    res.setHeader("Allow", ["GET"]); 
     return res.status(405).json({ message: "Method not allowed" });
   } catch (error) {
     console.error("Error in restaurants API:", error);

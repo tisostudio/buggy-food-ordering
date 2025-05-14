@@ -88,5 +88,6 @@ export default async function handler(
     }
   }
 
+  res.setHeader("Allow", ["GET","PATCH"]);
   return res.status(405).json({ message: "Method not allowed" });
 }
