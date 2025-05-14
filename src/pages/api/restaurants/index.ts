@@ -50,8 +50,10 @@ export default async function handler(
 
       
       
-      if (featured) {
-        query.featured = featured === "true";
+      if (featured === "true") {
+        query.featured =true;
+      }else if(featured === "false"){
+        query.featured = false;
       }
 
       console.log("API: Query built:", JSON.stringify(query));
