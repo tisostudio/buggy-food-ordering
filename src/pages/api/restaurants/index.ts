@@ -5,7 +5,7 @@ import Restaurant, { IRestaurant } from "@/models/Restaurant";
 
 interface RestaurantQuery {
   name?: { $regex: unknown; $options: string };
-  cuisine?: string | string[];
+  cuisine?: string | string[] | {$in: string[]};
   featured?: boolean;
 }
 
@@ -41,8 +41,11 @@ export default async function handler(
 
       
       if (cuisine) {
-        
-        query.cuisine = cuisine;
+        if (Array.isArray(cuisine) && cuisine.length > 0) {
+          query.cuisine = { $in: cuisine};  // Handle multiple cuisines using $in
+        } else {
+          query.cuisine = cuisine;  // Handle a single cuisine
+        }
       }
 
       
