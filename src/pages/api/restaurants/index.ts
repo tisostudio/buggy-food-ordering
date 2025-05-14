@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "@/lib/db";
 import Restaurant, { IRestaurant } from "@/models/Restaurant";
+import { SortOrder } from "mongoose";
 
 
 interface RestaurantQuery {
@@ -63,9 +64,15 @@ export default async function handler(
       const totalPages = Math.ceil(totalCount / limit);
       console.log("API: Pagination data:", { totalCount, totalPages });
 
+      const querySort:{ [key: string]: SortOrder } = { featured: -1 };
+      if (sort) {
+        const sortField = (sort as string).replace("-", "");
+        const sortDirection = (sort as string).startsWith("-") ? -1 : 1;
+        querySort[sortField] = sortDirection;
+      }
       
       let restaurants = await Restaurant.find(query)
-        .sort({ featured: -1 })
+        .sort(querySort)
         .skip(skip)
         .limit(limit)
         .select("-menu"); 
@@ -74,19 +81,19 @@ export default async function handler(
       console.log("API: Restaurants found:", restaurants.length);
 
       
-      if (sort) {
-        const sortField = (sort as string).replace("-", "");
-        const sortDirection = (sort as string).startsWith("-") ? -1 : 1;
+      // if (sort) {
+      //   const sortField = (sort as string).replace("-", "");
+      //   const sortDirection = (sort as string).startsWith("-") ? -1 : 1;
 
         
-        restaurants = restaurants.sort((a, b) => {
-          const aValue = a.get(sortField);
-          const bValue = b.get(sortField);
-          if (aValue < bValue) return -1 * sortDirection;
-          if (aValue > bValue) return 1 * sortDirection;
-          return 0;
-        });
-      }
+      //   restaurants = restaurants.sort((a, b) => {
+      //     const aValue = a.get(sortField);
+      //     const bValue = b.get(sortField);
+      //     if (aValue < bValue) return -1 * sortDirection;
+      //     if (aValue > bValue) return 1 * sortDirection;
+      //     return 0;
+      //   });
+      // }
 
       
       return res.status(200).json({
