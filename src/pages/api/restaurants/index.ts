@@ -60,6 +60,7 @@ export default async function handler(
 
       
       let restaurants = await Restaurant.find(query)
+        .sort({ featured: -1 })
         .skip(skip)
         .limit(limit)
         .select("-menu"); 

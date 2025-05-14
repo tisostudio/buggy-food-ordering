@@ -32,7 +32,7 @@ export default function Home() {
           params: {
             ...(cuisine && { cuisine }),
             ...(searchQuery && { search: searchQuery }),
-            page: currentPage - 1,
+            page: currentPage,
             limit: ITEMS_PER_PAGE,
           },
         });
