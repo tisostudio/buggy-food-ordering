@@ -36,7 +36,7 @@ export default async function handler(
 
       
       if (search) {
-        query.name = { $regex: search, $options: "" }; 
+        query.name = { $regex: search, $options: "i" }; 
       }
 
       
