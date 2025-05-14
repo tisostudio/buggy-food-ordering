@@ -25,8 +25,8 @@ export default async function handler(
       const { cuisine, sort, featured, search } = req.query;
       console.log("API: Query params:", { cuisine, sort, featured, search });
 
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);;
+      const limit = Math.max(1, parseInt(req.query.limit as string) || 10);
       
       const skip = (page - 1) * limit;
       console.log("API: Pagination:", { page, limit, skip });
