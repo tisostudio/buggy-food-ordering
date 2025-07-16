@@ -106,7 +106,7 @@ const RestaurantDetail: NextPage = () => {
 
   const addItemToCart = useCallback(
     (menuItem: MenuItem) => {
-      console.log("restaurant",restaurant)
+      console.log("restaurant", restaurant);
       if (!restaurant) return;
       if (!user) {
         toast.error("please login in order to add item to the cart");
@@ -252,7 +252,7 @@ const RestaurantDetail: NextPage = () => {
                       className={`px-4 py-2 rounded-full whitespace-nowrap ${
                         selectedCategory === null
                           ? "bg-indigo-600 text-white border-indigo-600"
-                              : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                          : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                       }`}
                     >
                       All
@@ -293,12 +293,16 @@ const RestaurantDetail: NextPage = () => {
                             <span className="text-gray-900 font-medium">
                               ${item.price.toFixed(2)}
                             </span>
-                            <button
-                              onClick={() => addItemToCart(item)}
-                              className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
-                            >
-                              Add to Cart
-                            </button>
+                            {item.available ?
+                              <button
+                                onClick={() => addItemToCart(item)}
+                                className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
+                              >
+                                Add to Cart
+                              </button>
+                              :
+                              <p>not available</p>
+                            }
                           </div>
                         </div>
                         <div className="ml-4 flex-shrink-0 w-20 h-20 relative">
