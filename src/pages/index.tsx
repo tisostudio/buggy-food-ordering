@@ -15,7 +15,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const ITEMS_PER_PAGE = 9;
-  const { user } = useAuth();
+  const { user,logout } = useAuth();
 
   useEffect(() => {
 
@@ -147,6 +147,10 @@ export default function Home() {
               Register
             </Link>
             </>
+            }
+            {
+              user &&
+              <button onClick={logout}>logout</button>
             }
           </div>
         </div>
