@@ -23,6 +23,7 @@ export default async function handler(
     }
 
     if (!EMAIL_REGEX.test(email)) {
+      console.log("email")
       return res.status(400).json({ message: "Invalid email format" });
     }
 
@@ -31,7 +32,11 @@ export default async function handler(
         .status(400)
         .json({ message: "Password must be at least 8 characters long" });
     }
-
+    if (password.length > 16) {
+      return res
+        .status(400)
+        .json({ message: "Password must not be more than 16 characters" });
+    }
     const user = await User.create({
       name,
       email: email.toLowerCase(),
