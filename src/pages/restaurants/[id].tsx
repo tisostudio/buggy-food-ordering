@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import connectDB from "@/lib/db";
 import { MenuItem } from "@/models/Restaurant";
 import { useCartStore } from "@/store/cartStore";
@@ -44,9 +45,9 @@ const RestaurantDetail: NextPage = () => {
   const { id } = router.query;
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const { addItem, items } = useCartStore();
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
+    const{user}= useAuth()
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -104,9 +105,13 @@ const RestaurantDetail: NextPage = () => {
   const filteredMenuItems = getMenuItemsByCategory(selectedCategory);
 
   const addItemToCart = useCallback(
+
     (menuItem: MenuItem) => {
       if (!restaurant) return;
-
+      if(!user){
+        toast.error("please login in order to add item to the cart")
+        return
+      }
       const restaurantId = restaurant._id || restaurant.id || "";
 
       const cartItemId = `${restaurantId}-${menuItem.name}`;
