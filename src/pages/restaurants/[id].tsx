@@ -105,32 +105,51 @@ const RestaurantDetail: NextPage = () => {
   const filteredMenuItems = getMenuItemsByCategory(selectedCategory);
 
   const addItemToCart = useCallback(
-    (menuItem: MenuItem) => {
-      console.log("restaurant", restaurant);
-      if (!restaurant) return;
-      if (!user) {
-        toast.error("please login in order to add item to the cart");
-        return;
-      }
-      if (isRestaurantOpen) {
-        toast.error("Restaurant is not open please try again later");
-        return;
-      }
-      const restaurantId = restaurant._id || restaurant.id || "";
+  (menuItem: MenuItem) => {
+    console.log("restaurant", restaurant);
+    if (!restaurant) return;
+    if (!user) {
+      toast.error("Please login in order to add item to the cart");
+      return;
+    }
+    if (!isRestaurantOpen) {
+      toast.error("Restaurant is not open, please try again later");
+      return;
+    }
 
-      const cartItemId = `${restaurantId}-${menuItem.name}`;
+    const restaurantId = restaurant._id || restaurant.id || "";
+    const cartItemId = `${restaurantId}-${menuItem.name}`;
 
-      addItem({
-        id: cartItemId,
-        restaurantId: restaurantId,
-        menuItem,
-        quantity: 1,
-      });
+    // Check if cart already has items from another restaurant
+    const currentRestaurantId = useCartStore.getState().restaurantId;
+    const cartHasItems = useCartStore.getState().items.length > 0;
 
-      toast.success("Item added to cart");
-    },
-    [restaurant, isRestaurantOpen],
-  );
+    if (
+      cartHasItems &&
+      currentRestaurantId &&
+      currentRestaurantId !== restaurantId
+    ) {
+      const confirmed = window.confirm(
+        "Your cart contains items from a different restaurant. Do you want to clear the cart and add this item?"
+      );
+
+      if (!confirmed) return;
+
+      // Clear the cart before adding
+      useCartStore.getState().clearCart();
+    }
+
+    useCartStore.getState().addItem({
+      id: cartItemId,
+      restaurantId,
+      menuItem,
+      quantity: 1,
+    });
+
+    toast.success("Item added to cart");
+  },
+  [restaurant, isRestaurantOpen, user],
+);
 
   return (
     <div className="min-h-screen bg-white">
