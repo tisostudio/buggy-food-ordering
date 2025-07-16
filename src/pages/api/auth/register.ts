@@ -26,6 +26,10 @@ export default async function handler(
       console.log("email")
       return res.status(400).json({ message: "Invalid email format" });
     }
+    const query = await User.findOne({email:email})
+    if(query){
+      return res.status(400).json({ message: "email already exists" });
+    }
 
     if (password.length < 8) {
       return res
