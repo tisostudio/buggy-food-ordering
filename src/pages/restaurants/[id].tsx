@@ -47,7 +47,7 @@ const RestaurantDetail: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { addItem, items } = useCartStore();
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
-    const{user}= useAuth()
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -86,7 +86,7 @@ const RestaurantDetail: NextPage = () => {
 
   const categories = restaurant?.menu
     ? Array.from(
-        new Set(restaurant.menu.map((item) => item.category).filter(Boolean))
+        new Set(restaurant.menu.map((item) => item.category).filter(Boolean)),
       )
     : [];
 
@@ -98,19 +98,18 @@ const RestaurantDetail: NextPage = () => {
     }
 
     return restaurant.menu.filter(
-      (item) => item.category.toLowerCase() === category.toLowerCase()
+      (item) => item.category.toLowerCase() === category.toLowerCase(),
     );
   };
 
   const filteredMenuItems = getMenuItemsByCategory(selectedCategory);
 
   const addItemToCart = useCallback(
-
     (menuItem: MenuItem) => {
       if (!restaurant) return;
-      if(!user){
-        toast.error("please login in order to add item to the cart")
-        return
+      if (!user) {
+        toast.error("please login in order to add item to the cart");
+        return;
       }
       const restaurantId = restaurant._id || restaurant.id || "";
 
@@ -125,7 +124,7 @@ const RestaurantDetail: NextPage = () => {
 
       toast.success("Item added to cart");
     },
-    [restaurant, isRestaurantOpen]
+    [restaurant, isRestaurantOpen],
   );
 
   return (
@@ -247,25 +246,27 @@ const RestaurantDetail: NextPage = () => {
                       onClick={() => setSelectedCategory(null)}
                       className={`px-4 py-2 rounded-full whitespace-nowrap ${
                         selectedCategory === null
-                          ? "bg-primary text-white"
-                          : "bg-gray-200 text-gray-800"
+                          ? "bg-indigo-600 text-white border-indigo-600"
+                              : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                       }`}
                     >
                       All
                     </button>
-                    {categories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-4 py-2 rounded-full whitespace-nowrap ${
-                          selectedCategory === category
-                            ? "bg-primary text-white"
-                            : "bg-gray-200 text-gray-800"
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
+                    <div className="flex flex-wrap gap-2 items-center">
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => setSelectedCategory(category)}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 border ${
+                            selectedCategory === category
+                              ? "bg-indigo-600 text-white border-indigo-600"
+                              : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -339,7 +340,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params as { id: string };
 
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants/${id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants/${id}`,
     );
 
     return {
@@ -360,3 +361,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default RestaurantDetail;
+
