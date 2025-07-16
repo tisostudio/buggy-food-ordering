@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -11,6 +12,7 @@ const SignInPage: NextPage = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const{login}= useAuth()
 
   const isValidEmail = () => true;
 
@@ -31,22 +33,15 @@ const SignInPage: NextPage = () => {
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      if (rememberMe) {
-        localStorage.setItem("userEmail", email);
 
-        localStorage.setItem("userPassword", password);
-      }
-
-      sessionStorage.setItem("isLoggedIn", "true");
-      sessionStorage.setItem("userEmail", email);
-
+    
+     
       toast.success("Sign in successful");
       setIsLoading(false);
-
+      login(email,password)
       const redirectPath = (router.query.redirectTo as string) || "/";
       router.push(redirectPath);
-    }, 1500);
+
   };
 
   return (
