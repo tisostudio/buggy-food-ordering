@@ -46,7 +46,8 @@ export default async function handler(
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production"
+      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production",
+      { expiresIn: Math.floor(Date.now() / 1000) + (60 * 60)}
     );
 
     return res.status(201).json({
