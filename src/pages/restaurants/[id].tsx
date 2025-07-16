@@ -106,9 +106,14 @@ const RestaurantDetail: NextPage = () => {
 
   const addItemToCart = useCallback(
     (menuItem: MenuItem) => {
+      console.log("restaurant",restaurant)
       if (!restaurant) return;
       if (!user) {
         toast.error("please login in order to add item to the cart");
+        return;
+      }
+      if (isRestaurantOpen) {
+        toast.error("Restaurant is not open please try again later");
         return;
       }
       const restaurantId = restaurant._id || restaurant.id || "";
