@@ -18,6 +18,8 @@ export default function Home() {
   const { user } = useAuth();
 
   useEffect(() => {
+
+    console.log("userrrrr",user)
     const fetchRestaurants = async () => {
       try {
         console.log("Frontend: Fetching restaurants with params:", {
@@ -135,12 +137,17 @@ export default function Home() {
             >
               Admin
             </Link>
-            <Link href="/signin" className="text-blue-600 hover:underline">
+            {
+              !user &&
+              <>
+              <Link href="/signin" className="text-blue-600 hover:underline">
               Sign In
             </Link>
             <Link href="/register" className="text-blue-600 hover:underline">
               Register
             </Link>
+            </>
+            }
           </div>
         </div>
       </header>
