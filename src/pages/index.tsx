@@ -15,9 +15,11 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const ITEMS_PER_PAGE = 9;
-  const { user } = useAuth();
+  const { user,logout } = useAuth();
 
   useEffect(() => {
+
+    console.log("userrrrr",user)
     const fetchRestaurants = async () => {
       try {
         console.log("Frontend: Fetching restaurants with params:", {
@@ -135,12 +137,21 @@ export default function Home() {
             >
               Admin
             </Link>
-            <Link href="/signin" className="text-blue-600 hover:underline">
+            {
+              !user &&
+              <>
+              <Link href="/signin" className="text-blue-600 hover:underline">
               Sign In
             </Link>
             <Link href="/register" className="text-blue-600 hover:underline">
               Register
             </Link>
+            </>
+            }
+            {
+              user &&
+              <button onClick={logout}>logout</button>
+            }
           </div>
         </div>
       </header>

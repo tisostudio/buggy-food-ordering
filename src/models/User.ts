@@ -1,5 +1,7 @@
+import { compare, hash } from "bcrypt";
 import mongoose, { Schema, Document } from "mongoose";
-import { hash, compare } from "bcrypt";
+
+
 
 
 const EMAIL_REGEX = /\S+@\S+\.\S+/;
@@ -40,6 +42,9 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: [true, "Please provide a password"],
       minlength: [8, "Password must be at least 8 characters"],
+      maxlength: [16, "Password must be less than 16 characters"],
+
+      
       
     },
     addresses: [

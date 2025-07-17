@@ -2,13 +2,16 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 type FormData = {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
+};
+type ErrorResponse = {
+  message: string;
 };
 
 export default function Register() {
@@ -44,9 +47,11 @@ export default function Register() {
 
       
       router.push("/signin");
-    } catch (err: unknown) {
+    } catch (err) {
+      const error = err as AxiosError<ErrorResponse>
+      const message =error.response?.data?.message || "Registration failed. Please try again.";
       
-      setError("Registration failed. Please try again.");
+      setError(message);
       console.error("Registration error:", (err as Error).message);
     } finally {
       setIsSubmitting(false);

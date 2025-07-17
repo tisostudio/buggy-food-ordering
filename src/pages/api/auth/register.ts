@@ -23,7 +23,12 @@ export default async function handler(
     }
 
     if (!EMAIL_REGEX.test(email)) {
+      console.log("email")
       return res.status(400).json({ message: "Invalid email format" });
+    }
+    const query = await User.findOne({email:email})
+    if(query){
+      return res.status(400).json({ message: "email already exists" });
     }
 
     if (password.length < 8) {
@@ -31,7 +36,11 @@ export default async function handler(
         .status(400)
         .json({ message: "Password must be at least 8 characters long" });
     }
-
+    if (password.length > 16) {
+      return res
+        .status(400)
+        .json({ message: "Password must not be more than 16 characters" });
+    }
     const user = await User.create({
       name,
       email: email.toLowerCase(),
@@ -41,7 +50,8 @@ export default async function handler(
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production"
+      process.env.JWT_SECRET || "fallback_secret_do_not_use_in_production",
+      { expiresIn: Math.floor(Date.now() / 1000) + (60 * 60)}
     );
 
     return res.status(201).json({

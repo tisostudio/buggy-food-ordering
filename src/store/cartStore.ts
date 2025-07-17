@@ -27,24 +27,31 @@ export const useCartStore = create<CartState>()(
       restaurantId: null,
 
       addItem: (newItem) => {
-        const { items } = get();
+        const { items, restaurantId } = get();
 
+        // If cart has items from a different restaurant, clear it first
+        if (items.length > 0 && restaurantId !== newItem.restaurantId) {
+          set({
+            items: [newItem],
+            restaurantId: newItem.restaurantId,
+          });
+          return true;
+        }
+
+        // If cart is empty, set the restaurantId
         if (items.length === 0) {
           set({ restaurantId: newItem.restaurantId });
         }
 
-        
         const existingItemIndex = items.findIndex(
-          (item) => item.id === newItem.id
+          (item) => item.id === newItem.id,
         );
 
         if (existingItemIndex >= 0) {
-          
           const updatedItems = [...items];
           updatedItems[existingItemIndex].quantity += newItem.quantity;
           set({ items: updatedItems });
         } else {
-          
           set({ items: [...items, newItem] });
         }
 
@@ -55,7 +62,6 @@ export const useCartStore = create<CartState>()(
         const { items } = get();
         const updatedItems = items.filter((item) => item.id !== id);
 
-        
         if (updatedItems.length === 0) {
           set({ items: updatedItems, restaurantId: null });
         } else {
@@ -66,11 +72,9 @@ export const useCartStore = create<CartState>()(
       updateQuantity: (id, quantity) => {
         const { items } = get();
 
-        
         const itemIndex = items.findIndex((item) => item.id === id);
 
         if (itemIndex >= 0) {
-          
           const updatedItems = [...items];
           updatedItems[itemIndex].quantity = quantity;
           set({ items: updatedItems });
@@ -84,12 +88,8 @@ export const useCartStore = create<CartState>()(
       getTotalPrice: () => {
         const { items } = get();
         return items.reduce((total, item) => {
-          
           const isPremiumItem = item.menuItem.price > 25;
 
-          
-          
-          
           const quantity = Math.abs(item.quantity);
 
           return (
@@ -106,6 +106,7 @@ export const useCartStore = create<CartState>()(
     {
       name: "food-cart-storage",
       skipHydration: true,
-    }
-  )
+    },
+  ),
 );
+

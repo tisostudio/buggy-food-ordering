@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import connectDB from "@/lib/db";
 import { MenuItem } from "@/models/Restaurant";
 import { useCartStore } from "@/store/cartStore";
@@ -44,9 +45,9 @@ const RestaurantDetail: NextPage = () => {
   const { id } = router.query;
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const { addItem, items } = useCartStore();
   const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -85,7 +86,7 @@ const RestaurantDetail: NextPage = () => {
 
   const categories = restaurant?.menu
     ? Array.from(
-        new Set(restaurant.menu.map((item) => item.category).filter(Boolean))
+        new Set(restaurant.menu.map((item) => item.category).filter(Boolean)),
       )
     : [];
 
@@ -97,31 +98,58 @@ const RestaurantDetail: NextPage = () => {
     }
 
     return restaurant.menu.filter(
-      (item) => item.category.toLowerCase() === category.toLowerCase()
+      (item) => item.category.toLowerCase() === category.toLowerCase(),
     );
   };
 
   const filteredMenuItems = getMenuItemsByCategory(selectedCategory);
 
   const addItemToCart = useCallback(
-    (menuItem: MenuItem) => {
-      if (!restaurant) return;
+  (menuItem: MenuItem) => {
+    console.log("restaurant", restaurant);
+    if (!restaurant) return;
+    if (!user) {
+      toast.error("Please login in order to add item to the cart");
+      return;
+    }
+    if (!isRestaurantOpen) {
+      toast.error("Restaurant is not open, please try again later");
+      return;
+    }
 
-      const restaurantId = restaurant._id || restaurant.id || "";
+    const restaurantId = restaurant._id || restaurant.id || "";
+    const cartItemId = `${restaurantId}-${menuItem.name}`;
 
-      const cartItemId = `${restaurantId}-${menuItem.name}`;
+    // Check if cart already has items from another restaurant
+    const currentRestaurantId = useCartStore.getState().restaurantId;
+    const cartHasItems = useCartStore.getState().items.length > 0;
 
-      addItem({
-        id: cartItemId,
-        restaurantId: restaurantId,
-        menuItem,
-        quantity: 1,
-      });
+    if (
+      cartHasItems &&
+      currentRestaurantId &&
+      currentRestaurantId !== restaurantId
+    ) {
+      const confirmed = window.confirm(
+        "Your cart contains items from a different restaurant. Do you want to clear the cart and add this item?"
+      );
 
-      toast.success("Item added to cart");
-    },
-    [restaurant, isRestaurantOpen]
-  );
+      if (!confirmed) return;
+
+      // Clear the cart before adding
+      useCartStore.getState().clearCart();
+    }
+
+    useCartStore.getState().addItem({
+      id: cartItemId,
+      restaurantId,
+      menuItem,
+      quantity: 1,
+    });
+
+    toast.success("Item added to cart");
+  },
+  [restaurant, isRestaurantOpen, user],
+);
 
   return (
     <div className="min-h-screen bg-white">
@@ -242,25 +270,27 @@ const RestaurantDetail: NextPage = () => {
                       onClick={() => setSelectedCategory(null)}
                       className={`px-4 py-2 rounded-full whitespace-nowrap ${
                         selectedCategory === null
-                          ? "bg-primary text-white"
-                          : "bg-gray-200 text-gray-800"
+                          ? "bg-indigo-600 text-white border-indigo-600"
+                          : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                       }`}
                     >
                       All
                     </button>
-                    {categories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-4 py-2 rounded-full whitespace-nowrap ${
-                          selectedCategory === category
-                            ? "bg-primary text-white"
-                            : "bg-gray-200 text-gray-800"
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
+                    <div className="flex flex-wrap gap-2 items-center">
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => setSelectedCategory(category)}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 border ${
+                            selectedCategory === category
+                              ? "bg-indigo-600 text-white border-indigo-600"
+                              : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -282,12 +312,16 @@ const RestaurantDetail: NextPage = () => {
                             <span className="text-gray-900 font-medium">
                               ${item.price.toFixed(2)}
                             </span>
-                            <button
-                              onClick={() => addItemToCart(item)}
-                              className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
-                            >
-                              Add to Cart
-                            </button>
+                            {item.available ?
+                              <button
+                                onClick={() => addItemToCart(item)}
+                                className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white font-bold"
+                              >
+                                Add to Cart
+                              </button>
+                              :
+                              <p>not available</p>
+                            }
                           </div>
                         </div>
                         <div className="ml-4 flex-shrink-0 w-20 h-20 relative">
@@ -334,7 +368,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params as { id: string };
 
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants/${id}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants/${id}`,
     );
 
     return {
@@ -355,3 +389,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default RestaurantDetail;
+
