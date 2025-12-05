@@ -85,7 +85,9 @@ async function seedRestaurants(count: number) {
             name: faker.commerce.productName(),
             description: faker.commerce.productDescription(),
             price,
-            image: "https://via.placeholder.com/150",
+            image: `https://picsum.photos/200?_t=${Date.now()}_${faker.string.alphanumeric(
+              6
+            )}`,
             category: faker.helpers.arrayElement([
               "Appetizers",
               "Main Course",
@@ -147,7 +149,9 @@ async function seedRestaurants(count: number) {
           daysOpen: daysOpen.length > 0 ? daysOpen : [0, 1, 2, 3, 4, 5, 6],
         },
         isNightRestaurant: isNightRestaurant,
-        image: "https://via.placeholder.com/150",
+        image: `https://picsum.photos/200?_t=${Date.now()}_${faker.string.alphanumeric(
+          6
+        )}`,
         featured: faker.datatype.boolean({ probability: 0.3 }),
         manuallyClosed: faker.datatype.boolean({ probability: 0.2 }),
       };

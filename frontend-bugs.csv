@@ -1,0 +1,16 @@
+Category,Bug Description,Impact Level,UI Component,User Experience Impact
+Navigation,No Loading when navigating to another page,Medium,Page Transitions,Poor feedback during navigation
+Authentication,Login/Register doesn't do anything after showing success message,High,Auth Forms,Broken user flow
+Authentication,No validation for phone number format,Medium,Registration Form,Data integrity issues
+Restaurant UI,Categories aren't properly visible,Medium,Restaurant List,Poor content organization
+Restaurant UI,No warning when adding items from different restaurants,High,Menu Items,Confusing cart experience
+Restaurant UI,No warning when adding items from closed restaurants,High,Menu Items,Poor order validation
+Restaurant UI,"Add" button isn't disabled for unavailable items,Medium,Menu Items,Misleading interaction
+Cart,Allows adding items from different restaurants without warning,High,Cart Component,Order confusion
+Cart,Doesn't validate if restaurant is open before adding to cart,High,Cart Component,Invalid order states
+Cart,Allows setting negative or zero quantities,High,Cart Component,Invalid order states
+Cart,Cart persistence issues when navigating between pages,High,Cart Component,Data loss
+Cart,Negative quantity is allowed,High,Cart Component,Invalid order states
+Checkout,No Credit Card Validation,High,Payment Form,Payment security
+Checkout,Address validation allows invalid formats,Medium,Checkout Form,Data quality issues
+Authentication,Able to place order without being logged in,High,Order Flow,Security issue 

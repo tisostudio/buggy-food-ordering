@@ -1,0 +1,25 @@
+Category,Bug Description,Impact Level,Component,Technical Impact,Security Impact
+Authentication,No token expiration handling,High,JWT Authentication,Security vulnerability,Token misuse possible
+Authentication,Doesn't handle duplicate email,Medium,User Registration,Data integrity,None
+Authentication,Email validation regex isn't complete,Medium,Input Validation,Data quality,None
+Authentication,No maximum password length validation,Medium,Input Validation,Resource consumption,Potential DoS
+Restaurant Model,When calculating average rating it doesn't round properly,Low,Data Processing,Incorrect display,None
+Restaurant Model,Delivery time calculation doesn't account for peak hours,Medium,Business Logic,Poor user experience,None
+Restaurant Model,Free delivery logic has edge cases that don't work,Medium,Business Logic,Incorrect charges,None
+Restaurant Model,Items marked unavailable still appear in search,High,Query Logic,Poor user experience,None
+Restaurant Model,Restaurant appears open when closed for certain hours,High,Business Logic,Invalid orders,None
+Restaurant Model,Featured restaurants sometimes don't appear at top,Medium,Query Logic,Business impact,None
+API Endpoint,Pagination offset calculation is wrong,Medium,Query Logic,Data inconsistency,None
+API Endpoint,Case-sensitive search for restaurant names,Medium,Search Logic,Poor search results,None
+API Endpoint,Doesn't properly handle array of cuisines parameters,Medium,Query Parameters,Limited functionality,None
+API Endpoint,Featured filter converts string 'false' to boolean true,High,Data Processing,Incorrect filtering,None
+API Endpoint,Sort applied after query instead of during,Medium,Performance,Poor query performance,None
+API Endpoint,Count doesn't apply same filters as actual query,High,Data Processing,Incorrect pagination,None
+API Endpoint,Inconsistent response format across endpoints,Medium,API Design,Integration issues,None
+API Endpoint,hasMore pagination calculation is incorrect,Medium,Pagination Logic,Navigation issues,None
+API Endpoint,Missing Allow header for 405 status,Low,HTTP Headers,Non-standard response,None
+API Endpoint,Generic error handling doesn't distinguish error types,Medium,Error Handling,Debug difficulty,None
+Cart,Subtotal calculation wrong for items over $25,High,Price Calculation,Financial impact,None
+Orders,Orders can be placed without payment verification,Critical,Payment Processing,Financial loss,Fraud risk
+Orders,Delivery time estimates don't account for order volume,Medium,Business Logic,Poor user experience,None
+Orders,Order minimum quantity not enforced,Medium,Business Logic,Business rule violation,None 
